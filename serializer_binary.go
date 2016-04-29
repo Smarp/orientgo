@@ -700,6 +700,14 @@ func (f binaryRecordFormatV0) writeSingleValue(w *rw.Writer, off int, o interfac
 			}
 		}
 	}()
+	// handle nil pointers
+	if !reflect.ValueOf(o).CanAddr() {
+		// I am nil
+		// Treat it the same way as ANY
+		// Reflect NULL value
+		err = w.Err()
+		return
+	}
 	switch tp {
 	case BYTE:
 		w.WriteByte(toByte(o))
