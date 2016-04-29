@@ -216,6 +216,8 @@ func OTypeForValue(val interface{}) (ftype OType) {
 		ftype = LINKBAG
 	case time.Time:
 		ftype = DATETIME
+	case *time.Time:
+		ftype = DATETIME
 	// TODO: more types need to be added
 	default:
 		if isDecimal(val) {
