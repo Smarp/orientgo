@@ -729,7 +729,13 @@ func (f binaryRecordFormatV0) writeSingleValue(w *rw.Writer, off int, o interfac
 		if t, ok := o.(int64); ok {
 			w.WriteVarint(t)
 		} else {
-			t := o.(time.Time)
+			var t time.Time
+			if _, ok := o.(time.Time); ok {
+				t = o.(time.Time)
+			} else if _, ok := o.(*time.Time); ok {
+				tptr := o.(*time.Time)
+				t = *tptr
+			}
 			it := t.Unix()*1000 + int64(t.Nanosecond())/1e6
 			w.WriteVarint(it)
 		}
@@ -918,6 +924,8 @@ func toString(o interface{}) string {
 		return v
 	case []byte:
 		return string(v)
+	case *string:
+		return string(*v)
 	default: // TODO: use Stringer interface in case of failure?
 		return reflect.ValueOf(o).Convert(reflect.TypeOf(string(""))).Interface().(string)
 	}
