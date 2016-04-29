@@ -369,7 +369,7 @@ func (f binaryRecordFormatV0) readSingleValue(r *rw.ReadSeeker, valueType OType,
 	defer func() {
 		if r := recover(); r != nil {
 			if ic, ok := r.(*runtime.TypeAssertionError); ok {
-				err = fmt.Errorf("writeSingleValue(%v): %v", valueType, ic)
+				err = fmt.Errorf("readSingleValue(%v): %v", valueType, ic)
 			} else {
 				panic(r)
 			}
